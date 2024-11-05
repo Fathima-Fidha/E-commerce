@@ -9,5 +9,22 @@ exports.productsView = async (req, res) => {
   res.render('client/products',{products})
 }
 
+exports.getHomePage = (req,res)=>{
+  res.render("client/home");
+}
 
+exports.getAboutUs = (req,res)=>{
+  res.render("client/aboutUs");
+}
 
+exports.getBlog = (req,res)=>{
+  res.render("client/blog");
+}
+
+exports.getServices = (req,res)=>{
+  res.render("client/services");
+}
+
+exports.getContactUs = (req,res)=>{
+  res.render("client/contactUs");
+}

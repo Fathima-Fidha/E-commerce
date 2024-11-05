@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Razorpay Payment</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+  <h2>Complete Your Payment</h2>
+  <script>
+    const options = {
+      key: 'rzp_test_RJf3MNDoHKza5M',
+      amount: '<%= amount %>',
+      currency: '<%= currency %>',
+      name: 'Your Company Name',
+      description: 'Order Payment',
+      order_id: '<%= orderId %>',
+      handler: function (response) {
+        alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+        window.location.href = '/order-confirmation';
+      },
+      prefill: {
+        name: 'Customer Name',
+        email: 'customer@example.com',
+        contact: '9999999999'
+      }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.open();
+  </script>
+
+<footer class="footer-section">
+  <%- include('layout/footer') %>
+</footer>
+<!-- End Footer Section -->	
+
+
+<script src="js/bootstrap.bundle.min.js"></script>
+<script src="js/tiny-slider.js"></script>
+<script src="js/custom.js"></script>
+</body>
+</html>

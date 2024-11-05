@@ -13,6 +13,10 @@ const path = require("path");
 const app = express();
 const bcrypt = require('bcrypt');
 const cartRoutes = require('./routes/cartRoutes'); // Cart routes
+const checkoutRouter = require('./routes/checkoutRoutes');
+
+
+
 
 const password = 'admin123';
 bcrypt.hash(password, 10, (err, hash) => {
@@ -59,13 +63,13 @@ app.get("/edit-product",adminRoutes);
 app.get("/stock",adminRoutes);
 app.get("/logout",adminRoutes);
 app.use("/cart",cartRoutes);
-
-
-
-
-
-
-
+app.use('/razorpay', checkoutRouter);
+app.get('/home',clientRoutes);
+app.get('/aboutUs',clientRoutes);
+app.get('/blog',clientRoutes);
+app.get('/contactUs',clientRoutes);
+app.get('/servives',clientRoutes);
+app.use('/', checkoutRouter);
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

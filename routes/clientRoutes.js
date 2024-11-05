@@ -9,5 +9,14 @@ const clientController = require('../controllers/clientController');
 // router.get('/add', productController.getAddProductForm);
 router.get('/products',clientController.productsView);
 
+router.get('/home',clientController.getHomePage);
+
+router.get('/aboutUs',clientController.getAboutUs);
+
+router.get('/blog',clientController.getBlog);
+
+router.get('/contactUs',clientController.getContactUs);
+
+router.get('/services',clientController.getServices);
 //home
 module.exports = router;
