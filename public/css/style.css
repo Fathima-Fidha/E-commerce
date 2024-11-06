@@ -202,7 +202,6 @@ a {
   .product-section .product-item {
     text-align: center;
     text-decoration: none;
-    display: block;
     position: relative;
     padding-bottom: 50px;
     cursor: pointer; }
@@ -823,4 +822,10 @@ textarea {
 
 .order-container a.btn:hover {
   background-color: #555;
+}
+
+.price-cart{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

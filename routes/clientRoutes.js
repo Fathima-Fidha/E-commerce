@@ -18,5 +18,7 @@ router.get('/blog',clientController.getBlog);
 router.get('/contactUs',clientController.getContactUs);
 
 router.get('/services',clientController.getServices);
+
+router.get('/product/:id', clientController.getProductDetail);
 //home
 module.exports = router;
