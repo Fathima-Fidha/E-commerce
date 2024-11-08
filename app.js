@@ -70,6 +70,9 @@ app.get('/blog',clientRoutes);
 app.get('/contactUs',clientRoutes);
 app.get('/servives',clientRoutes);
 app.use('/', checkoutRouter);
+
+
+
 // Start the server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

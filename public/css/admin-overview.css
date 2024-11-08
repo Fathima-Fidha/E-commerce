@@ -169,3 +169,32 @@
     background-color: #0056b3;
 }
 
+/* General button styling */
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Style for View Orders button */
+button.view-orders {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}
+
+button.view-orders:hover {
+  background-color: #45a049;
+}
+
+/* Style for Block/Unblock button */
+button.block-user {
+  background-color: #f44336; /* Red */
+  color: white;
+}
+
+button.block-user:hover {
+  background-color: #e53935;
+}

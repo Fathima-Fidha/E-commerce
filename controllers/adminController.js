@@ -209,3 +209,91 @@ exports.logout = (req, res) => {
         res.redirect('/admin/login'); 
     }
 };
+
+exports.getUserOverview = async (req, res) => {
+  try {
+    // Fetch all users from the database
+    const users = await User.find();
+
+    // Render the userOverview view with the list of users
+    res.render('admin/userOverview', { users });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server error');
+  }
+}
+
+exports.getUserOrders = async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const orders = await Order.find({ userId });
+      res.json(orders);
+  } catch (error) {
+      res.status(500).json({ message: 'Error fetching orders' });
+  }
+};
+
+// Toggle block/unblock status for a user
+exports.toggleBlockUser = async (req, res) => {
+  try {
+      const userId = req.params.id;
+      const user = await User.findById(userId);
+      if (user) {
+          // Toggle the block status
+          user.isBlocked = !user.isBlocked;
+          await user.save();
+
+          // Log the updated status for debugging
+          console.log(`User ${userId} is now ${user.isBlocked ? "blocked" : "unblocked"}`);
+
+          // Send a clear response with the new status
+          res.json({
+              message: user.isBlocked ? 'User blocked' : 'User unblocked',
+              isBlocked: user.isBlocked 
+          });
+      } else {
+          res.status(404).json({ message: 'User not found' });
+      }
+  } catch (error) {
+      console.error("Error toggling user block status:", error);
+      res.status(500).json({ message: 'Error blocking/unblocking user' });
+  }
+};
+
+// orderController.js
+
+
+exports.getUserOrdersPage = async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const orders = await Order.find({ userId }); // Ensure `userId` exists in the `Order` schema
+        res.render('admin/orders', { orders });
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).send("Internal Server Error"); // Sends an error message to the client
+    }
+};
+
+// Update order status
+// Update order status
+exports.updateOrderStatus = async (req, res) => {
+  const orderId = req.params.orderId; // use orderId here
+  const { status } = req.body;
+  console.log(status);
+
+  try {
+    const order = await Order.findById(orderId);
+    if (order) {
+      order.status = status;
+      await order.save();
+      res.json({ success: true, message: 'Order status updated successfully.' });
+    } else {
+      res.status(404).json({ success: false, message: 'Order not found.' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Error updating order status.' });
+  }
+};
+
+

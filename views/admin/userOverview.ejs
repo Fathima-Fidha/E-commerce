@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard Overview</title>
+    <link rel="stylesheet" href="/css/admin-overview.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <ul>
+            <li><a href="overview">Dashboard Overview</a></li>
+            <li><a href="userOverview">User Overview</a></li>
+            <li><a href="add-product">Add New Product</a></li>
+            <li><a href="product-list">List of Full Products</a></li>
+            <li><a href="stock">Stock</a></li>
+            <li><a href="logout" onclick="return confirmLogout();">Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="content">
+        <header>
+            <h1>Dashboard Overview</h1>
+        </header>
+        <section>
+            <div class="user-overview">
+                <h2>User Overview</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% users.forEach(user => { %>
+                            <tr>
+                                <td><%= user._id %></td>
+                                <td><%= user.username %></td>
+                                <td><%= user.email %></td>
+                                <td>
+                                    <button class="view-orders" onclick="window.location.href='/admin/user/<%= user._id %>/orders'">View Orders</button>
+                                    <button class="block-user" onclick="blockUser('<%= user._id %>', this)">
+                                        <%= user.isBlocked ? "Unblock" : "Block" %>
+                                    </button>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal for displaying orders -->
+    <div id="orderModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>User Orders</h2>
+            <ul id="orderList"></ul>
+        </div>
+    </div>
+
+    <style>
+        /* Modal styling */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); }
+        .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; width: 50%; border-radius: 8px; }
+        .close { float: right; font-size: 1.5rem; cursor: pointer; }
+    </style>
+
+    <script>
+        // Function to confirm logout
+        function confirmLogout() {
+            return confirm("Are you sure you want to logout?");
+        }
+
+        // View Orders of a User
+        async function viewOrders(userId) {
+            try {
+                const response = await fetch(`/admin/user/${userId}/orders`);
+                const orders = await response.json();
+
+                // Display orders in the modal
+                const orderList = document.getElementById('orderList');
+                orderList.innerHTML = ''; // Clear previous orders
+
+                orders.forEach(order => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Order ID: ${order._id}, Total: $${order.total}, Status: ${order.status}`;
+                    orderList.appendChild(listItem);
+                });
+
+                // Show the modal
+                document.getElementById('orderModal').style.display = 'block';
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+                alert('Failed to load orders.');
+            }
+        }
+
+        // Close the modal
+        function closeModal() {
+            document.getElementById('orderModal').style.display = 'none';
+        }
+
+        // Block/Unblock a User
+        async function blockUser(userId, button) {
+            try {
+                const response = await fetch(`/admin/user/${userId}/block`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const result = await response.json();
+
+                console.log("Server response:", result);
+
+                if (result.isBlocked) {
+                    alert('User has been blocked.');
+                    button.textContent = 'Unblock';
+                } else {
+                    alert('User has been unblocked.');
+                    button.textContent = 'Block';
+                }
+            } catch (error) {
+                console.error("Error toggling user block status:", error);
+                alert('An error occurred while toggling user block status.');
+            }
+        }
+
+        // View Orders of a User
+function viewOrders(userId) {
+    window.location.href = `/admin/user/${userId}/orders`; // Redirect to the orders page
+}
+
+    </script>
+</body>
+</html>

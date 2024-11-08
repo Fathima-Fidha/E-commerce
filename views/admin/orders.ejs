@@ -1,0 +1,35 @@
+<!-- views/admin/orders.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Orders</title>
+    <!-- Link to external CSS file -->
+    <link rel="stylesheet" href="/css/orders.css">
+</head>
+<body>
+    <h1>User Orders</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Order Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><a href="/admin/orders/<%= order._id %>"><%= order._id %></a></td>
+                    <td>$<%= order.totalAmount %></td>
+                    <td><%= order.status %></td>
+                    <td><%= new Date(order.orderDate).toLocaleDateString() %></td>
+                    
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

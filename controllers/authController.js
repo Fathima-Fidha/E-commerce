@@ -6,11 +6,21 @@ exports.getSignup = (req, res) => {
 };
 
 exports.postSignup = async (req, res) => {
+  
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.render('client/signup', { error: errors.array()[0].msg });
+        const errorMessages = {};
+        errors.array().forEach(error => {
+            console.log(error, 'err');
+            
+            errorMessages[error.path] = error.msg;
+        });
+        console.log(errors, 'helo');
+        
+        console.log(errorMessages, 'err message');
+        
+        return res.render('client/signup', { error: errorMessages });
     }
-
     try {
         const { username, email, password } = req.body;
         const newUser = new User({ username, email, password });
@@ -34,6 +44,9 @@ exports.postLogin = async (req, res) => {
         if (!user) {
             return res.render('client/login', { error: 'Invalid email or password.' });
         }
+        if (user.isBlocked) {
+            return res.status(403).json({ message: 'Your account has been blocked. Contact support for assistance.' });
+          }
 
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
