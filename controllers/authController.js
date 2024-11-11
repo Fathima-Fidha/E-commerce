@@ -53,7 +53,7 @@ exports.postLogin = async (req, res) => {
             return res.render('client/login', { error: 'Invalid email or password.' });
         }
 
-        req.session.user = user;
+        req.session.userId = user._id;
         req.user=user; // Store user ID in session
         res.redirect('/home');
     } catch (err) {

@@ -34,7 +34,7 @@ app.use(session({
         
     }),
     cookie: { maxAge: 180 * 60 * 1000 } // 3 hours
-}))
+}));
 
 app.use((req,res,next)=>{
     if (req.session.user) {

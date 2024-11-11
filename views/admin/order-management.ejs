@@ -1,0 +1,48 @@
+<!-- views/admin/order-management.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Management</title>
+    <link rel="stylesheet" href="/css/order-management.css">
+</head>
+<body>
+    <h1>Order Management</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>User</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% orders.forEach(order => { %>
+                <tr>
+                    <td><a href="/admin/orders/<%= order._id %>"><%= order._id %></a></td>
+                    <td><%= order.userId.username %></td> <!-- Assuming you have a `name` field in User model -->
+                    <td>$<%= order.totalAmount %></td>
+                    <td><%= order.status %></td>
+                    <td>
+                        <!-- Add button to update status -->
+                        <form action="/admin/orders/<%= order._id %>/status" method="POST">
+                            <select name="status" id="status">
+                                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
+                                <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
+                                <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
+                            </select>
+                            <button type="submit">Update Status</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</body>
+</html>

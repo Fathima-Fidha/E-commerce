@@ -296,4 +296,32 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
+exports.getOrderManagement = async (req, res) => {
+  try {
+      // Fetch all orders, populate user details if necessary
+      const orders = await Order.find().populate('userId'); // Assuming each order has a userId field
 
+      // Render the 'order-management' page with the orders
+      res.render('admin/order-management', { orders });
+  } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).send('Server Error');
+  }
+};
+
+// adminController.js
+
+exports.logout = (req, res) => {
+  if (req.session) {
+      req.session.destroy((err) => {
+          if (err) {
+              console.error('Failed to destroy session:', err);
+              return res.status(500).send('Failed to log out');
+          }
+          // Redirect to the login page after logout
+          res.redirect('/admin/login');
+      });
+  } else {
+      res.redirect('/admin/login');
+  }
+};
