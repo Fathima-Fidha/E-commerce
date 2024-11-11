@@ -28,13 +28,20 @@ bcrypt.hash(password, 10, (err, hash) => {
 app.use(session({
     secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     store: new MongoStore({
         mongoUrl: 'mongodb://localhost:27017/yourDB', 
         
     }),
     cookie: { maxAge: 180 * 60 * 1000 } // 3 hours
 }))
+
+app.use((req,res,next)=>{
+    if (req.session.user) {
+        req.user=req.session.user;
+    }
+    next();
+})
 // app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')));
@@ -70,7 +77,7 @@ app.get('/blog',clientRoutes);
 app.get('/contactUs',clientRoutes);
 app.get('/servives',clientRoutes);
 app.use('/', checkoutRouter);
-
+app.use('/profile', clientRoutes);
 
 
 // Start the server

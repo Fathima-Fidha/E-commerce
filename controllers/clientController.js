@@ -1,5 +1,7 @@
 const product = require('../models/product');
-const Product=require('../models/product')
+const Product=require('../models/product');
+const User=require('../models/user');
+const Order=require('../models/order');
 //views
 exports.productsView = async (req, res) => {
   const products = await product.find()
@@ -43,5 +45,41 @@ exports.getProductDetail = async (req, res) => {
   } catch (err) {
       console.error("Error fetching product details:", err);
       res.status(500).send("Error fetching product details");
+  }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {  
+      
+      if (!req.user) {
+          return res.status(404).send("User not authenticated");
+      }
+const user = await User.findById(req.user._id);
+if (!user) {
+  return res.status(404).send("User not found");
+}
+      // Render the profile page with user data
+      res.render('client/profile', { user });
+  } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving user details");
+  }
+};
+
+exports.getOrders = async (req, res) => {
+  try {
+      // Check if req.user exists
+      if (!req.user) {
+          return res.status(401).send('User not authenticated');
+      }
+      
+      // Fetch orders for the logged-in user
+      const orders = await Order.find({ userId: req.user._id }).populate('items.productId');
+      
+      // Render orders view with the orders data
+      res.render('client/orders', { orders });
+  } catch (error) {
+      console.error('Error fetching orders:', error);
+      res.status(500).send('Server Error');
   }
 };

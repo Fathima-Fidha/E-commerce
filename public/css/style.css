@@ -829,3 +829,16 @@ textarea {
   flex-direction: column;
   align-items: center;
 }
+
+.custom-navbar-cta .dropdown-menu {
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+}
+
+.custom-navbar-cta .dropdown-item:hover {
+  background-color: #000000;
+  color: white;
+}
+
+
+
