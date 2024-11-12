@@ -6,6 +6,7 @@ const adminController = require('../controllers/adminController');
 const Order = require('../models/order'); // Adjust path as needed
 const adminMiddleware = require('../middleware/admin'); // Middleware to check admin authentication
 
+
 const upload = adminController.upload; // For file upload functionality
 
 // Admin login route
@@ -77,5 +78,6 @@ router.get('/orders/:orderId', adminMiddleware, async (req, res) => {
 
 // Route to update order status
 router.post('/orders/:orderId/status', adminMiddleware, adminController.updateOrderStatus);
+
 
 module.exports = router;
