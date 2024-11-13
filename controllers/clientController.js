@@ -49,32 +49,33 @@ exports.getProductDetail = async (req, res) => {
 };
 
 exports.getUserProfile = async (req, res) => {
-  try {  
-      
-      if (!req.user) {
-          return res.status(404).send("User not authenticated");
+  try {
+      // The user is already attached to req by the isAuthenticated middleware
+      const user = req.user;
+
+      if (!user) {
+          return res.status(401).send('User not authenticated');
       }
-const user = await User.findById(req.user._id);
-if (!user) {
-  return res.status(404).send("User not found");
-}
-      // Render the profile page with user data
+
+      // Render profile view with user data
       res.render('client/profile', { user });
-  } catch (err) {
-      console.error(err);
-      res.status(500).send("Error retrieving user details");
+  } catch (error) {
+      console.error('Error fetching profile:', error);
+      res.status(500).send('Server Error');
   }
 };
 
 exports.getOrders = async (req, res) => {
   try {
-      // Check if req.user exists
-      if (!req.user) {
+      // The user is already attached to req by the isAuthenticated middleware
+      const user = req.user;
+
+      if (!user) {
           return res.status(401).send('User not authenticated');
       }
-      
+
       // Fetch orders for the logged-in user
-      const orders = await Order.find({ userId: req.user._id }).populate('items.productId');
+      const orders = await Order.find({ userId: user._id }).populate('items.productId');
       
       // Render orders view with the orders data
       res.render('client/orders', { orders });

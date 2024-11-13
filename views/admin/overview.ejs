@@ -3,22 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard Overview</title>
+    <title>Add New Product</title>
     <link rel="stylesheet" href="/css/admin-overview.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.css">
+
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Admin Dashboard</h2>
-        <ul>
-            <li><a href="overview">Dashboard Overview</a></li>
-            <li><a href="userOverview">User Overview</a></li>
-            <li><a href="order-management">Order Management</a></li>
-            <li><a href="add-product">Add New Product</a></li>
-            <li><a href="product-list">List of Full Products</a></li>
-            <li><a href="stock">Stock</a></li>
-            <li><a href="logout" onclick="return confirmLogout();">Logout</a></li>
-        </ul>
-    </div>
+    <%- include('layout/sidebar') %>
     
     <div class="content">
         <header>
@@ -55,9 +46,22 @@
         </section>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
-    function confirmLogout(){
-        return confirm("Are you sure you want to logout?")
-    }
+    function confirmLogout() {
+    swal({
+        title: "Are you sure?",
+        text: "You will be logged out of the admin dashboard.",
+        icon: "warning",
+        buttons: ["Cancel", "Yes, logout"],
+        dangerMode: true,
+    }).then((willLogout) => {
+        if (willLogout) {
+            // Redirect to the logout route
+            window.location.href = "/admin/logout";
+        }
+    });
+}
+
 </script>
 </html>

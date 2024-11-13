@@ -18,42 +18,41 @@ router.post('/login', adminController.postAdminLogin);
 // Admin logout route
 router.get('/logout', adminController.logout);
 
-// Protected Routes - Apply `adminMiddleware` to secure these routes
 
 // Overview Page
-router.get('/overview', adminMiddleware, adminController.getOverview);
+router.get('/overview', adminMiddleware,adminController.setNoCacheHeaders, adminController.getOverview);
 
 // Product Management
 
 // Add New Product
-router.get('/add-product', adminMiddleware, adminController.getAddProduct);
-router.post('/add-product', adminMiddleware, upload, adminController.addProduct);
+router.get('/add-product', adminMiddleware,adminController.setNoCacheHeaders, adminController.getAddProduct);
+router.post('/add-product', adminMiddleware, upload,adminController.setNoCacheHeaders, adminController.addProduct);
 
 // Edit Product
-router.get('/edit-product/:id', adminMiddleware, adminController.getEditProduct);
-router.post('/edit-product/:id', adminMiddleware, upload, adminController.postEditProduct);
+router.get('/edit-product/:id', adminMiddleware,adminController.setNoCacheHeaders, adminController.getEditProduct);
+router.post('/edit-product/:id', adminMiddleware, upload,adminController.setNoCacheHeaders, adminController.postEditProduct);
 
 // Delete Product
-router.post('/delete-product/:id', adminMiddleware, adminController.postDeleteProduct);
+router.post('/delete-product/:id', adminMiddleware,adminController.setNoCacheHeaders, adminController.postDeleteProduct);
 
 // Product List Page
-router.get('/product-list', adminMiddleware, adminController.getProductList);
+router.get('/product-list', adminMiddleware,adminController.setNoCacheHeaders, adminController.getProductList);
 
 // Stock Management Page
-router.get('/stock', adminMiddleware, adminController.getStock);
+router.get('/stock', adminMiddleware,adminController.setNoCacheHeaders, adminController.getStock);
 
 // User Management
 
 // User Overview Page
-router.get('/userOverview', adminMiddleware, adminController.getUserOverview);
+router.get('/userOverview', adminMiddleware,adminController.setNoCacheHeaders, adminController.getUserOverview);
 
 // Block/Unblock User
-router.post('/user/:id/block', adminMiddleware, adminController.toggleBlockUser);
+router.post('/user/:id/block', adminMiddleware,adminController.setNoCacheHeaders, adminController.toggleBlockUser);
 
 // Order Management
 
 // Route for Order Management Page
-router.get('/order-management', adminMiddleware, adminController.getOrderManagement);
+router.get('/order-management', adminMiddleware,adminController.setNoCacheHeaders, adminController.getOrderManagement);
 
 // Route to get a user's orders
 router.get('/user/:id/orders', adminMiddleware, adminController.getUserOrdersPage);

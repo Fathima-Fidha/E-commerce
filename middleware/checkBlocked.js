@@ -1,8 +1,23 @@
-function checkBlocked(req, res, next) {
-    if (req.isAuthenticated() && req.user.isBlocked) {
-        return res.status(403).send('Your account is blocked. You cannot perform this action.');
-    }
-    next();
-}
+const User = require('../models/user');
 
-module.exports = checkBlocked;
+const isAuthenticated = async (req, res, next) => {
+    if (req.session.userId) {
+        const user = await User.findById(req.session.userId);
+
+        if (user && user.isBlocked) {
+            // If user is blocked, destroy the session and prevent access
+            req.session.destroy(err => {
+                if (err) console.error(err);
+                return res.redirect('/auth/login?error=Your account has been blocked.');
+            });
+        } else {
+            // Attach user to request if authenticated
+            req.user = user;
+            return next();
+        }
+    } else {
+        res.redirect('/auth/login'); // Redirect to login if not authenticated
+    }
+};
+
+module.exports = { isAuthenticated };

@@ -5,27 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="/css/admin-overview.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>Admin Dashboard</h2>
-        <ul>
-            <li><a href="overview">Dashboard Overview</a></li>
-            <li><a href="userOverview">User Overview</a></li>
-            <li><a href="order-management">Order Management</a></li>
-            <li><a href="add-product">Add New Product</a></li>
-            <li><a href="product-list">List of Full Products</a></li>
-            <li><a href="stock">Stock</a></li>
-            <li><a href="logout" onclick="return confirmLogout();">Logout</a></li>
-        </ul>
-    </div>
+    <%- include('layout/sidebar') %>
 
     <div class="content">
         <header>
             <h1>Edit Product</h1>
         </header>
         <section>
-            <form action="/admin/edit-product/<%= product._id %>" method="POST" enctype="multipart/form-data">
+            <!-- Ensure the form tag is not prematurely closed -->
+            <form action="/admin/edit-product/<%= product._id %>" method="POST" enctype="multipart/form-data" onsubmit="return confirmUpdate(event)">
                 <div class="form-group">
                     <label for="name">Product Name</label>
                     <input type="text" name="name" id="name" value="<%= product.name %>" required>
@@ -59,9 +50,40 @@
         </section>
     </div>
 </body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
 <script>
     function confirmLogout() {
-        return confirm("Are you sure you want to logout?");
+        swal({
+            title: "Are you sure?",
+            text: "You will be logged out of the admin dashboard.",
+            icon: "warning",
+            buttons: ["Cancel", "Yes, logout"],
+            dangerMode: true,
+        }).then((willLogout) => {
+            if (willLogout) {
+                // Redirect to the logout route
+                window.location.href = "/admin/logout";
+            }
+        });
     }
-    </script>
+</script>
+<script>
+    // SweetAlert confirmation for updating product
+    function confirmUpdate(event) {
+        event.preventDefault(); // Prevent the form from submitting immediately
+
+        swal({
+            title: "Are you sure?",
+            text: "Do you want to update this product?",
+            icon: "warning",
+            buttons: ["Cancel", "Yes, update it"],
+            dangerMode: true,
+        }).then((willUpdate) => {
+            if (willUpdate) {
+                // Submit the form if the user confirms
+                event.target.submit();
+            }
+        });
+    }
+</script>
 </html>

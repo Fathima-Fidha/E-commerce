@@ -325,3 +325,8 @@ exports.logout = (req, res) => {
       res.redirect('/admin/login');
   }
 };
+
+exports.setNoCacheHeaders = (req, res, next) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  next();
+};

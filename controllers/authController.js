@@ -37,24 +37,26 @@ exports.getLogin = (req, res) => {
 
 exports.postLogin = async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body,'body');
-    
+
     try {
-        const user = await User.findOne({ email: req.body.email });
+        const user = await User.findOne({ email });
         if (!user) {
             return res.render('client/login', { error: 'Invalid email or password.' });
         }
+        
         if (user.isBlocked) {
-            return res.status(403).json({ message: 'Your account has been blocked. Contact support for assistance.' });
-          }
+            // Render login.ejs with an error message if the account is blocked
+            return res.render('client/login', { error: 'Your account has been blocked. Contact support for assistance.' });
+        }
 
-        const isMatch = await user.comparePassword(req.body.password);
+        const isMatch = await user.comparePassword(password); // Assuming comparePassword is a method in User model
         if (!isMatch) {
             return res.render('client/login', { error: 'Invalid email or password.' });
         }
 
+        // If login is successful, store user ID in session and redirect to home page
         req.session.userId = user._id;
-        req.user=user; // Store user ID in session
+        req.user = user; 
         res.redirect('/home');
     } catch (err) {
         res.render('client/login', { error: 'Error logging in, please try again.' });

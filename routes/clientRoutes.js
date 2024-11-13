@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const { isAuthenticated } = require('../middleware/checkBlocked');
 const clientController = require('../controllers/clientController');
-const isAuthenticated =require('../middleware/auth');
-const checkBlocked = require('../middleware/checkBlocked');
+
 //product
 // router.get('/', productController.getAllProducts);
 // router.post('/add', productController.addProduct);
@@ -23,8 +23,8 @@ router.get('/services',clientController.getServices);
 router.get('/product/:id', clientController.getProductDetail);
 
 // Route to display user profile
-router.get('/', isAuthenticated,checkBlocked, clientController.getUserProfile);
+router.get('/profile',isAuthenticated, clientController.getUserProfile);
 
-router.get('/orders',checkBlocked,clientController.getOrders)
+router.get('/orders',isAuthenticated,clientController.getOrders);
 //home
 module.exports = router;
