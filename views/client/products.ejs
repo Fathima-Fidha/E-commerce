@@ -3,6 +3,8 @@
 
 <head>
 	<%- include('layout/head') %>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body>
@@ -76,26 +78,45 @@
 		<script src="js/tiny-slider.js"></script>
 		<script src="js/custom.js"></script>
 
-		<script>
-			document.querySelectorAll('.cart-button').forEach(button => {
-				button.addEventListener('click', async (event) => {
-					const productId = event.target.getAttribute('data-id');
-					console.log(productId, 'id');
+		
+			<script>
+    document.querySelectorAll('.cart-button').forEach(button => {
+        button.addEventListener('click', async (event) => {
+            const productId = event.target.getAttribute('data-id');
+            console.log(productId, 'id');
 
-					const response = await fetch('/cart/add-to-cart', {
-						method: 'POST',
-						headers: {
-							'Accept': 'application/json',
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify({ productId })
-					});
-					const data = await response.json();
-					console.log(data, 'res');
+            const response = await fetch('/cart/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productId })
+            });
+            const data = await response.json();
+            console.log(data, 'res');
 
-					alert(data.message);
-				});
-			});
+            // Show success message with SweetAlert
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Added to Cart',
+                    text: data.message,
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                // Show error message if there’s an issue
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message || 'Could not add to cart.',
+                    showConfirmButton: true
+                });
+            }
+        });
+    });
+
 		</script>
 		<script>
 			// Initialize cart count

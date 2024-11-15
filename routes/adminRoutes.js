@@ -5,6 +5,7 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const Order = require('../models/order'); // Adjust path as needed
 const adminMiddleware = require('../middleware/admin'); // Middleware to check admin authentication
+const couponController = require('../controllers/couponController');
 
 
 const upload = adminController.upload; // For file upload functionality
@@ -78,5 +79,19 @@ router.get('/orders/:orderId', adminMiddleware, async (req, res) => {
 // Route to update order status
 router.post('/orders/:orderId/status', adminMiddleware, adminController.updateOrderStatus);
 
+// Route to display the coupon management page
+router.get('/coupon-management', couponController.getCouponManagementPage);
+
+// Route to create a new coupon
+router.post('/create-coupon', couponController.createCoupon);
+
+// Route to delete a coupon
+router.get('/delete-coupon/:id', couponController.deleteCoupon);
+
+// Route to show edit coupon page
+router.get('/edit-coupon/:id', couponController.getEditCouponPage);
+
+// Route to handle coupon updates
+router.post('/edit-coupon/:id', couponController.updateCoupon);
 
 module.exports = router;

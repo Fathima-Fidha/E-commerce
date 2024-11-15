@@ -26,5 +26,15 @@ router.get('/product/:id', clientController.getProductDetail);
 router.get('/profile',isAuthenticated, clientController.getUserProfile);
 
 router.get('/orders',isAuthenticated,clientController.getOrders);
+
+router.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Could not log out.');
+        }
+        res.redirect('auth/login'); // Redirect to login or home page after logging out
+    });
+});
+
 //home
 module.exports = router;

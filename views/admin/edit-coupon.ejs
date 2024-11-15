@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Coupon</title>
+    <link rel="stylesheet" href="/css/admin-overview.css">
+    <link rel="stylesheet" href="/css/edit-coupon.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+</head>
+<body>
+   
+
+    <div class="content">
+        <header>
+            <h1>Edit Coupon</h1>
+        </header>
+
+        <!-- Edit Coupon Form -->
+        <section>
+            <form id="editCouponForm" action="/admin/edit-coupon/<%= coupon._id %>" method="POST">
+                <label for="code">Coupon Code</label>
+                <input type="text" name="code" id="code" value="<%= coupon.code %>" required>
+
+                <label for="discount">Discount Amount</label>
+                <input type="number" name="discount" id="discount" value="<%= coupon.discount %>" required>
+
+                <label for="expirationDate">Expiration Date</label>
+                <input type="date" name="expirationDate" id="expirationDate" value="<%= coupon.expirationDate.toISOString().split('T')[0] %>" required>
+
+                <label for="isActive">Status</label>
+                <select name="isActive" id="isActive">
+                    <option value="true" <%= coupon.isActive ? 'selected' : '' %>>Active</option>
+                    <option value="false" <%= !coupon.isActive ? 'selected' : '' %>>Inactive</option>
+                </select>
+
+                <button type="button" class="btn-submit" onclick="confirmUpdate()">Update Coupon</button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // SweetAlert confirmation for updating the coupon
+        function confirmUpdate() {
+            swal({
+                title: "Confirm Update",
+                text: "Are you sure you want to update this coupon?",
+                icon: "warning",
+                buttons: ["Cancel", "Update"],
+                dangerMode: true,
+            }).then((willUpdate) => {
+                if (willUpdate) {
+                    // Submit the form if the user confirms
+                    document.getElementById('editCouponForm').submit();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

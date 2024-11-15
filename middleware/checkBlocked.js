@@ -8,7 +8,8 @@ const isAuthenticated = async (req, res, next) => {
             // If user is blocked, destroy the session and prevent access
             req.session.destroy(err => {
                 if (err) console.error(err);
-                return res.redirect('/auth/login?error=Your account has been blocked.');
+                // Send error message to the login page to display in SweetAlert
+                return res.render('/auth/login', { error: 'Your account has been blocked.' });
             });
         } else {
             // Attach user to request if authenticated
@@ -21,3 +22,5 @@ const isAuthenticated = async (req, res, next) => {
 };
 
 module.exports = { isAuthenticated };
+
+

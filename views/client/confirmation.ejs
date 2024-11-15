@@ -2,18 +2,25 @@
 <html lang="en">
 <head>
     <%- include('layout/head') %>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <%- include('layout/navbar') %>
-    
-    <div class="container mt-5">
-        <h2 class="text-center">Order Confirmation</h2>
-        <p class="text-center">Thank You for your purchase</p>
-        <div class="text-center mt-4">
-            <a href="/products" class="btn btn-primary">Continue Shopping</a>
-        </div>
-    </div>
 
     <%- include('layout/footer') %>
+    <script>
+        // Display SweetAlert on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            Swal.fire({
+                title: 'Order Confirmed',
+                text: 'Thank you for your purchase!',
+                icon: 'success',
+                confirmButtonText: 'Continue Shopping'
+            }).then(() => {
+                // Redirect to the products page after the user clicks "Continue Shopping"
+                window.location.href = "/products";
+            });
+        });
+    </script>
 </body>
 </html>

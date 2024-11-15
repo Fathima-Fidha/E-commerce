@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Management</title>
+    <link rel="stylesheet" href="/css/admin-overview.css">
+    <link rel="stylesheet" href="/css/coupon-management.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+</head>
+<body>
+    <%- include('layout/sidebar') %>
+
+    <div class="content">
+        <header>
+            <h1>Coupon Management</h1>
+        </header>
+
+        <!-- Coupon Creation Form -->
+        <section>
+            <form action="/admin/create-coupon" method="POST">
+                <label for="code">Coupon Code</label>
+                <input type="text" name="code" id="code" required>
+
+                <label for="discount">Discount Amount</label>
+                <input type="number" name="discount" id="discount" required>
+
+                <label for="expirationDate">Expiration Date</label>
+                <input type="date" name="expirationDate" id="expirationDate" required>
+
+                <button type="submit">Create Coupon</button>
+            </form>
+        </section>
+
+        <!-- Coupons List -->
+        <section>
+            <h2>Existing Coupons</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Coupon Code</th>
+                        <th>Discount</th>
+                        <th>Expiration Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% coupons.forEach(coupon => { %>
+                        <tr>
+                            <td><%= coupon.code %></td>
+                            <td><%= coupon.discount %></td>
+                            <td><%= coupon.expirationDate.toISOString().split('T')[0] %></td>
+                            <td><%= coupon.isActive ? 'Active' : 'Inactive' %></td>
+                            <td>
+                                <button class="edit" onclick="window.location.href='/admin/edit-coupon/<%= coupon._id %>'">Edit</button>
+                                <button class="delete" onclick="confirmDelete('<%= coupon._id %>')">Delete</button>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <script>
+        // SweetAlert for delete confirmation
+        function confirmDelete(couponId) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to recover this coupon!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            }).then((willDelete) => {
+                if (willDelete) {
+                    window.location.href = `/admin/delete-coupon/${couponId}`;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
