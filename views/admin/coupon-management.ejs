@@ -79,5 +79,23 @@
             });
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <script>
+        function confirmLogout() {
+        swal({
+            title: "Are you sure?",
+            text: "You will be logged out of the admin dashboard.",
+            icon: "warning",
+            buttons: ["Cancel", "Yes, logout"],
+            dangerMode: true,
+        }).then((willLogout) => {
+            if (willLogout) {
+                // Redirect to the logout route
+                window.location.href = "/admin/logout";
+            }
+        });
+    }
+    
+    </script>
 </body>
 </html>
