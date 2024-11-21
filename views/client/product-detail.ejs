@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <%- include('layout/head') %>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
   <%- include('layout/navbar') %>
@@ -19,7 +20,7 @@
         <% if (product.stock>0) { %>
             <button class="cart-button" data-id="<%= product._id %>" onclick="addToCart()">Add to Cart</button>
           <% } else { %>
-            <button class="cart-button" disabled>Out of stock</button>
+            <button class="cart-button">Out of stock</button>
            
           <% } %>
       </div>
@@ -37,18 +38,56 @@
   <script src="/js/custom.js"></script>
   <script>
     document.querySelectorAll('.cart-button').forEach(button => {
-        button.addEventListener('click', async (event) => {
-            const productId = event.target.getAttribute('data-id');
-            const response = await fetch('/cart/add-to-cart', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId })
-            });
-            const data = await response.json();
-            alert(data.message);
+      button.addEventListener('click', async (event) => {
+        const isDisabled = event.target.hasAttribute('disabled');
+        
+        if (isDisabled) {
+          // Show SweetAlert for out of stock
+          Swal.fire({
+            icon: 'warning',
+            title: 'Out of Stock',
+            text: 'This product is currently out of stock.',
+            showConfirmButton: true
+          });
+          return;
+        }
+  
+        // Handle adding to cart for available items
+        const productId = event.target.getAttribute('data-id');
+        console.log(productId, 'id');
+  
+        const response = await fetch('/cart/add-to-cart', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ productId })
         });
+        const data = await response.json();
+        console.log(data, 'res');
+  
+        // Show success message with SweetAlert
+        if (response.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Added to Cart',
+            text: data.message,
+            showConfirmButton: false,
+            timer: 1500
+          });
+        } else {
+          // Show error message if there’s an issue
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: data.message || 'Could not add to cart.',
+            showConfirmButton: true
+          });
+        }
+      });
     });
-</script>
+  </script>
 <script>
   // Initialize cart count
   let cartCount = 0;

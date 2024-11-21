@@ -10,6 +10,8 @@ router.get('/checkout',isAuthenticated, checkoutController.getCheckout);
 router.post('/place-order', checkoutController.placeOrder);
 
 router.get('/order-confirmation', checkoutController.orderConfirmation); // Order confirmation page
+// Razorpay payment verification route
+router.post('/verify-payment',checkoutController.verifyPayment);
 
 // Success page after order confirmation
 router.get('/success', checkoutController.orderConfirmation);

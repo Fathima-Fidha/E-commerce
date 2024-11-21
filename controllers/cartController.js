@@ -11,7 +11,7 @@ exports.addToCart = async (req, res) => {
       // Find the product by its ID
       const product = await Product.findById(productId);
       if (!product) {
-          return res.status(404).json({ message: 'Product not found.' });
+          return res.status(404).json({ message: 'This product is currently out of stock.' });
       }
 
       let cart = await Cart.findOne({ userId });
@@ -52,6 +52,7 @@ exports.getCart = async (req, res) => {
         res.render('client/cart', { cartItems: [] });
     }
 };
+
 exports.updateQuantity = async (req, res) => {
     const { productId, action } = req.body;
     const userId = req.session.userId;
@@ -73,14 +74,20 @@ exports.updateQuantity = async (req, res) => {
         } else if (action === 'decrement' && item.quantity > 1) {
             item.quantity--;
         } else if (action === 'decrement' && item.quantity === 1) {
-            // Remove the item if quantity is 1 and 'decrement' is clicked
+            // Remove item from cart if quantity is 1 and 'decrement' is clicked
             cart.items = cart.items.filter(item => item.productId.toString() !== productId);
         }
 
         await cart.save();
 
-        // Recalculate subtotal and total after update
-        const subtotal = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+        // Recalculate totals
+        console.log(cart);
+        
+        const subtotal = cart.items.reduce((total, item) => {
+
+            return total + item.quantity * parseFloat(item.price);
+        }, 0);
+console.log(subtotal);
 
         res.status(200).json({
             success: true,
@@ -93,6 +100,7 @@ exports.updateQuantity = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error updating cart.' });
     }
 };
+
 
 
 exports.applyCoupon = async (req, res) => {

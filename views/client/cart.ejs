@@ -1,255 +1,262 @@
-<!-- /*
-* Bootstrap 5
-* Template Name: Furni
-* Template Author: Untree.co
-* Template URI: https://untree.co/
-* License: https://creativecommons.org/licenses/by/3.0/
-*/ -->
 <!doctype html>
 <html lang="en">
+
 <head>
   <%- include('layout/head') %>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-	</head>
+</head>
 
-	<body>
+<body>
+  <!-- Start Header/Navigation -->
+  <%- include('layout/navbar') %>
+  <!-- End Header/Navigation -->
 
-		<!-- Start Header/Navigation -->
-		<%- include('layout/navbar') %>
-		<!-- End Header/Navigation -->
+  <!-- Start Hero Section -->
+  <div class="hero">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-lg-5">
+          <div class="intro-excerpt">
+            <h1>Cart</h1>
+          </div>
+        </div>
+        <div class="col-lg-7"></div>
+      </div>
+    </div>
+  </div>
+  <!-- End Hero Section -->
 
-		<!-- Start Hero Section -->
-			<div class="hero">
-				<div class="container">
-					<div class="row justify-content-between">
-						<div class="col-lg-5">
-							<div class="intro-excerpt">
-								<h1>Cart</h1>
-							</div>
-						</div>
-						<div class="col-lg-7">
-							
-						</div>
-					</div>
-				</div>
-			</div>
-		<!-- End Hero Section -->
+  <div class="untree_co-section before-footer-section">
+    <div class="container">
+      <div class="row mb-5">
+        <div class="col-md-12">
+          <div class="site-blocks-table">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% if (cartItems.length === 0) { %>
+                <tr>
+                  <td colspan="4" class="text-center">Your cart is empty.</td>
+                </tr>
+                <% } else { %>
+                <% cartItems.forEach(item => { %>
+                  <tr data-id="<%= item.productId._id %>">
+                    <td><%= item.productId.name %></td>
+                    <td>
+                      <button class="btn btn-sm btn-outline-secondary change-quantity" data-id="<%= item.productId._id %>" data-action="decrement">-</button>
+                      <span id="quantity-<%= item.productId._id %>"><%= item.quantity %></span>
+                      <button class="btn btn-sm btn-outline-secondary change-quantity" data-id="<%= item.productId._id %>" data-action="increment">+</button>
+                    </td>
+                    <td id="price-<%= item.productId._id %>">$<%= item.productId.price %></td>
+                    <td id="total-<%= item.productId._id %>">$<%= (item.quantity * item.productId.price).toFixed(2) %></td>
+                  </tr>
+                  
+                <% }) %>
+                <% } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-		
-
-		<div class="untree_co-section before-footer-section">
-            <div class="container">
-              <div class="row mb-5">
-                <div class="col-md-12">
-                  <div class="site-blocks-table">
-                    <table class="table">
-                      <thead>
-                        <tr>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                      <% if (cartItems.length === 0) { %>
-                          <tr>
-                              <td colspan="4" class="text-center">Your cart is empty.</td>
-                          </tr>
-                      <% } else { %>
-                          <% cartItems.forEach(item => { %>
-                              <tr>
-                                  <td><%= item.productId.name %></td>
-                                  <td>
-                                      <button class="btn btn-sm btn-outline-secondary change-quantity" data-id="<%= item.productId._id %>" data-action="decrement">-</button>
-                                      <span id="quantity-<%= item.productId._id %>"><%= item.quantity %></span>
-                                      <button class="btn btn-sm btn-outline-secondary change-quantity" data-id="<%= item.productId._id %>" data-action="increment">+</button>
-                                  </td>
-                                  <td>$<%= item.productId.price %></td>
-                                  <td>$<%= item.quantity * item.productId.price %></td>
-                              </tr>
-                          <% }) %>
-                      <% } %>
-                  </tbody>
-                    
-                    </table>
-                  </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="row mb-5">
+            <div class="col-md-6">
+              <a href="/products" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <label class="text-black h4" for="coupon">Coupon</label>
+              <p>Enter your coupon code if you have one.</p>
+            </div>
+            <div class="col-md-8 mb-3 mb-md-0">
+              <input type="text" class="form-control py-3" id="couponCode" placeholder="Enter Coupon Code">
+            </div>
+            <div class="col-md-4">
+              <button type="button" class="btn btn-black" onclick="applyCoupon()">Apply Coupon</button>
+            </div>
+            <p id="discountMessage" style="color: green;"></p>
+          </div>
+        </div>
+        <div class="col-md-6 pl-5">
+          <div class="row justify-content-end">
+            <div class="col-md-7">
+              <div class="row">
+                <div class="col-md-12 text-right border-bottom mb-5">
+                  <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
                 </div>
               </div>
-        
-              <div class="row">
+              <div class="row mb-3">
                 <div class="col-md-6">
-                  <div class="row mb-5">
-                    
-                    <div class="col-md-6">
-                      <a href="/products" class="btn btn-outline-black btn-sm btn-block">Continue Shopping</a>
-                    </div>
-                  </div>
-                  <div class="row">
-                    
-                    <div class="col-md-12">
-                      <label class="text-black h4" for="coupon">Coupon</label>
-                      <p>Enter your coupon code if you have one.</p>
-                    </div>
-                    <div class="col-md-8 mb-3 mb-md-0">
-                      <input type="text" class="form-control py-3" id="couponCode" placeholder="Enter Coupon Code">
-                    </div>
-                    <div class="col-md-4">
-                      <button type="button" class="btn btn-black" onclick="applyCoupon()">Apply Coupon</button>
-                    </div>
-                    <p id="discountMessage" style="color: green;"></p>
-                  
-                  </div>
+                  <span class="text-black">Subtotal</span>
                 </div>
-                <div class="col-md-6 pl-5">
-                  <div class="row justify-content-end">
-                    <div class="col-md-7">
-                      <div class="row">
-                        <div class="col-md-12 text-right border-bottom mb-5">
-                          <h3 class="text-black h4 text-uppercase">Cart Totals</h3>
-                        </div>
-                      </div>
-                      <div class="row mb-3">
-                        <div class="col-md-6">
-                          <span class="text-black">Subtotal</span>
-                        </div>
-                        <div id=totalAmount class="col-md-6 text-right">
-                          <strong class="text-black">$<%= cartItems.reduce((total, item) => total + (item.price * item.quantity), 0) %></strong>
-                        </div>
-                      </div>
-                      <div class="row mb-5">
-                        <div class="col-md-6">
-                          <span class="text-black">Total</span>
-                        </div>
-        
-                        <div class="col-md-6 text-right">
-                          <strong class="text-black" id="finalTotal">$<%= cartItems.reduce((total, item) => total + (item.price * item.quantity), 0) %></strong>
-                        </div>
-                      </div>
-        
-                      <div class="row">
-                        <div class="col-md-12">
-                          <a href="/checkout"><button class="btn btn-black btn-lg py-3 btn-block" >Proceed To Checkout</button></a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div id="subtotalAmount" class="col-md-6 text-right">
+                  <strong class="text-black">$<%= cartItems.reduce((total, item) => total + (item.quantity * item.productId.price), 0).toFixed(2) %></strong>
+                </div>
+              </div>
+              <div class="row mb-5">
+                <div class="col-md-6">
+                  <span class="text-black">Total</span>
+                </div>
+                <div id="finalTotal" class="col-md-6 text-right">
+                  <strong class="text-black">$<%= cartItems.reduce((total, item) => total + (item.quantity * item.productId.price), 0).toFixed(2) %></strong>
+                </div>
+              </div>
+              
+
+              <div class="row">
+                <div class="col-md-12">
+                  <a href="/checkout"><button class="btn btn-black btn-lg py-3 btn-block">Proceed To Checkout</button></a>
                 </div>
               </div>
             </div>
           </div>
-		
+        </div>
+      </div>
+    </div>
+  </div>
 
-		<!-- Start Footer Section -->
-		<footer class="footer-section">
-			<%- include('layout/footer') %>
-		</footer>
-		<!-- End Footer Section -->	
+  <!-- Start Footer Section -->
+  <footer class="footer-section">
+    <%- include('layout/footer') %>
+  </footer>
+  <!-- End Footer Section -->
+ 
 
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="js/tiny-slider.js"></script>
+  <script src="js/custom.js"></script>
 
-		<script src="js/bootstrap.bundle.min.js"></script>
-		<script src="js/tiny-slider.js"></script>
-		<script src="js/custom.js"></script>
-    <script>
-      document.querySelectorAll('.change-quantity').forEach(button => {
-  button.addEventListener('click', async (event) => {
-    const productId = event.target.getAttribute('data-id');
-    const action = event.target.getAttribute('data-action');
-
-    const response = await fetch('/cart/update-quantity', {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ productId, action })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      const quantityElement = document.getElementById(`quantity-${productId}`);
-      quantityElement.textContent = data.newQuantity;
-
-      document.getElementById('subtotalAmount').textContent = `$${data.subtotal}`;
-      document.getElementById('finalTotal').textContent = `$${data.finalTotal}`;
-
-      Swal.fire({
-        title: 'Quantity Updated',
-        text: 'The quantity has been updated successfully!',
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      });
-    } else {
-      Swal.fire({
-        title: 'Error',
-        text: data.message,
-        icon: 'error',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    }
-  });
-});
-
-  </script>
-
-  <!-- Apply Coupon Script -->
+  <!-- Quantity Update Script -->
   <script>
-    async function applyCoupon() {
-  const couponCode = document.getElementById('couponCode').value.trim();
-  if (!couponCode) {
-    Swal.fire({
-      title: 'No Coupon Code',
-      text: 'Please enter a coupon code.',
-      icon: 'info',
-      timer: 1500,
-      showConfirmButton: false
-    });
-    return;
-  }
-
-  try {
-    const response = await fetch('/cart/apply-coupon', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ couponCode })
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      document.getElementById('discountMessage').textContent = `Discount Applied: -$${data.discount.toFixed(2)}`;
-      document.getElementById('finalTotal').textContent = `$${data.newTotal.toFixed(2)}`;
-
-      Swal.fire({
-        title: 'Coupon Applied!',
-        text: `You saved $${data.discount.toFixed(2)}.`,
-        icon: 'success',
-        timer: 1500,
-        showConfirmButton: false
-      });
-    } else {
-      Swal.fire({
-        title: 'Invalid Coupon',
-        text: data.message || 'Error applying coupon.',
-        icon: 'error',
-        timer: 2000,
-        showConfirmButton: false
-      });
-    }
-  } catch (error) {
-    Swal.fire({
-      title: 'Application Error',
-      text: 'An error occurred while applying the coupon.',
-      icon: 'error',
-      timer: 2000,
-      showConfirmButton: false
-    });
-  }
-}
-
-
-  </script>
+  document.querySelectorAll('.change-quantity').forEach(button => {
+    button.addEventListener('click', async (event) => {
+      const productId = event.target.getAttribute('data-id');
+      const action = event.target.getAttribute('data-action');
   
+      try {
+        const response = await fetch('/cart/update-quantity', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ productId, action })
+        });
+  
+        const data = await response.json();
+  
+        if (data.success) {
+          // Update quantity and totals in the UI
+          const quantityElement = document.getElementById(`quantity-${productId}`);
+          const totalElement = document.getElementById(`total-${productId}`);
+          const price = parseFloat(document.getElementById(`price-${productId}`).textContent.slice(1));
+  
+          // New quantity
+          const newQuantity = data.newQuantity;
+          quantityElement.textContent = newQuantity;
+  
+          // Update the total for this product
+          const newProductTotal = (newQuantity * price).toFixed(2);
+          totalElement.textContent = `$${newProductTotal}`;
+  
+          // Update subtotal and final total
+          const subtotalElement = document.getElementById('subtotalAmount');
+          const finalTotalElement = document.getElementById('finalTotal');
+  
+          const newSubtotal = parseFloat(data.subtotal || 0).toFixed(2);
+          const newFinalTotal = parseFloat(data.finalTotal || 0).toFixed(2);
+  
+          subtotalElement.textContent = `$${newSubtotal}`;
+          finalTotalElement.textContent = `$${newFinalTotal}`;
+  
+          // Remove product row if quantity is 0
+          if (newQuantity === 0) {
+            document.querySelector(`tr[data-id="${productId}"]`).remove();
+          }
+        } else {
+          Swal.fire({
+            title: 'Error',
+            text: data.message || 'Failed to update cart.',
+            icon: 'error',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      } catch (error) {
+        console.error('Error updating cart:', error);
+        Swal.fire({
+          title: 'Error',
+          text: 'An error occurred while updating the cart.',
+          icon: 'error',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+    });
+  });
+</script>  
+  
+<script>
+    async function applyCoupon() {
+      const couponCode = document.getElementById('couponCode').value.trim();
+      if (!couponCode) {
+        Swal.fire({
+          title: 'No Coupon Code',
+          text: 'Please enter a coupon code.',
+          icon: 'info',
+          timer: 1500,
+          showConfirmButton: false
+        });
+        return;
+      }
 
+      try {
+        const response = await fetch('/cart/apply-coupon', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ couponCode })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          document.getElementById('discountMessage').textContent = `Discount Applied: -$${data.discount.toFixed(2)}`;
+          document.getElementById('finalTotal').textContent = `$${data.newTotal.toFixed(2)}`;
+
+          Swal.fire({
+            title: 'Coupon Applied!',
+            text: `You saved $${data.discount.toFixed(2)}.`,
+            icon: 'success',
+            timer: 1500,
+            showConfirmButton: false
+          });
+        } else {
+          Swal.fire({
+            title: 'Invalid Coupon',
+            text: data.message || 'Error applying coupon.',
+            icon: 'error',
+            timer: 2000,
+            showConfirmButton: false
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          title: 'Application Error',
+          text: 'An error occurred while applying the coupon.',
+          icon: 'error',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+    }
+  </script>
 </body>
+
 </html>
